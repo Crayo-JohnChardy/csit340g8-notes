@@ -17,11 +17,13 @@ function Notes() {
     e.preventDefault()
     const title = form.title.trim()
     const body = form.body.trim()
-    
     if (!title || !body) return
-
     setNotes([...notes, { id: crypto.randomUUID(), title, body }])
     setForm({ title: '', body: '' })
+  }
+
+  function handleDelete(id) {
+    setNotes(notes.filter((note) => note.id !== id))
   }
 
   return (
@@ -71,8 +73,10 @@ function Notes() {
           {notes.map((note) => (
             <li key={note.id} className="relative min-h-32 bg-white px-6 py-5 shadow-[0_2px_4px_0_rgba(0,0,0,0.2)]">
               <NoteCard title={note.title} body={note.body} />
+              {/* 2. Add onClick to the button */}
               <button
                 type="button"
+                onClick={() => handleDelete(note.id)}
                 className="absolute top-4 right-5 cursor-pointer text-[26px] leading-none font-light text-gray-400 hover:text-gray-600"
               >
                 ×
