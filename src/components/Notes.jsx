@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import NoteCard from './NoteCard.jsx'
 
 const startingNotes = [
@@ -11,7 +11,6 @@ function Notes() {
     const saved = localStorage.getItem('notes')
     return saved ? JSON.parse(saved) : startingNotes
   })
-
   const [form, setForm] = useState({ title: '', body: '' })
   const [search, setSearch] = useState('')
   const titleRef = useRef(null)
@@ -45,9 +44,11 @@ function Notes() {
     setNotes(notes.filter((note) => note.id !== id))
   }
 
-  const filteredNotes = notes.filter((note) =>
-    note.title.toLowerCase().includes(search.toLowerCase())
-  )
+  const visibleNotes = useMemo(() => {
+    return notes.filter((note) =>
+      note.title.toLowerCase().includes(search.toLowerCase())
+    )
+  }, [notes, search])
 
   return (
     <div className="grid min-h-screen grid-cols-[420px_1fr]">
@@ -67,14 +68,14 @@ function Notes() {
       <section className="px-12 py-11">
         <h2 className="mb-6 text-3xl">All notes</h2>
         <ul className="grid grid-cols-3 items-start gap-5">
-          {filteredNotes.map((note) => (
+          {visibleNotes.map((note) => (
             <li key={note.id} className="relative min-h-32 bg-white px-6 py-5 shadow-[0_2px_4px_0_rgba(0,0,0,0.2)]">
               <NoteCard title={note.title} body={note.body} />
               <button type="button" onClick={() => handleDelete(note.id)} className="absolute top-4 right-5 cursor-pointer text-[26px] leading-none font-light text-gray-400 hover:text-gray-600">×</button>
             </li>
           ))}
         </ul>
-        {filteredNotes.length === 0 && <p className="text-lg text-[#949494]">No notes found</p>}
+        {visibleNotes.length === 0 && <p className="text-lg text-[#949494]">No notes found</p>}
       </section>
     </div>
   )
