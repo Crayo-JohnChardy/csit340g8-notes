@@ -1,9 +1,10 @@
-import { useState, useContext } from 'react'
+import { useState, useContext, memo } from 'react'
 import { SettingsContext } from '../SettingsContext'
 
-function NoteCard({ title, body }) {
+function NoteCard({ id, title, body, onDelete }) {
   const [isOpen, setIsOpen] = useState(false)
   const { largeText } = useContext(SettingsContext)
+
   return (
     <div>
       <h3 className={`pr-8 font-normal break-words ${largeText ? 'text-[28px]' : 'text-[22px]'}`}>{title}</h3>
@@ -11,7 +12,11 @@ function NoteCard({ title, body }) {
       <button type="button" onClick={() => setIsOpen(!isOpen)} className="mt-3 cursor-pointer text-[15px] font-normal text-[#b83f45] underline">
         {isOpen ? 'Show less' : 'Show more'}
       </button>
+      <button type="button" onClick={() => onDelete(id)} className="absolute top-4 right-5 cursor-pointer text-[26px] leading-none font-light text-gray-400 hover:text-gray-600">
+        ×
+      </button>
     </div>
   )
 }
-export default NoteCard
+
+export default memo(NoteCard)
