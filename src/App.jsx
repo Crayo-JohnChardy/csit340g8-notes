@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { SettingsContext } from './SettingsContext'
-import Notes from './components/Notes'
+import Notes from './components/Notes.jsx'
 import Info from './components/Info'
 
 function App() {
